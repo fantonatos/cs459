@@ -1,0 +1,4 @@
+AT
+ATI
+AT+CLAC
+AT+COPS
