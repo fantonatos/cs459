@@ -10,6 +10,7 @@
 #include <sys/wait.h>
 #include <syscall.h>
 #include <unistd.h>
+#include <sys/types.h>
 
 char* wlf = "whitelist.txt";
 #define MAX_SYSCALL 1000
@@ -60,6 +61,7 @@ load_table(void)
 void
 dbgLogTable()
 {
+    printf("System call whitelist:\n");
     for (int i = 0; i < MAX_SYSCALL; i++)
 	if (syscall_allowed[i])
 	    printf("Allow %d\n", i);
@@ -85,19 +87,17 @@ main(int argc, char** argv)
 	exit(1);
     }
 
+    printf("Running in %s mode\n", enforcing ? "enforce" : "analyze");
     if (enforcing) {
 	// Load the syscall table from the file
 	load_table();
+        dbgLogTable();
     } else {
 	// Set up the signal handler to save the syscall table
 	signal(SIGINT, (void (*)(int))save_table);
     }
 
-    printf("Defender running in %s mode\n", enforcing ? "enforce" : "analyze");
-    printf("Allowed system calls are:\n");
-    dbgLogTable();
     printf("Launching %s\n", exe);
-    sleep(1);
 
     pid_t pid = fork();
     if (pid == 0) {
@@ -127,11 +127,11 @@ main(int argc, char** argv)
 	if (ptrace(PTRACE_GETREGS, pid, 0, &regs) < 0) {
 	    break;
 	}
-	long syscall = regs.orig_rax;
+	long syscall = regs.orig_eax;
 
 	if (!enforcing) {
 	    // Updating the syscall table
-	    printf("Allowing syscall %ld\n", syscall);
+	    //printf("Allowing syscall %ld\n", syscall);
 	    syscall_allowed[syscall] = true;
 	} else {
 	    if (syscall_allowed[syscall] == false) {
