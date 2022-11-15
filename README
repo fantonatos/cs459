@@ -1,13 +1,20 @@
 CS 459 Science of Cyber Security
 
 
-rop/	Exploiting a stack buffer overflow to return-into-libc
-	and exec /bin/sh. Binary is 32-bit statically linked
-	and without stack canaries.
+rop/    Exploiting a stack buffer overflow to return-into-libc
+        and exec /bin/sh. Binary is 32-bit statically linked
+        and without stack canaries.
 
-	gcc -o AT at.c cat.c -fno-stack-protector -static
+        gcc -o AT at.c cat.c -fno-stack-protector -static
 
-	AT: ELF 32-bit LSB executable, Intel 80386, version 1 (GNU/Linux),
-	statically linked, for GNU/Linux 2.6.32,
-	BuildID[sha1]=ff6285a3ba8c78600c64a0ad120a0099dca012de, not stripped
+        AT: ELF 32-bit LSB executable, Intel 80386, version 1 (GNU/Linux),
+        statically linked, for GNU/Linux 2.6.32,
+        BuildID[sha1]=ff6285a3ba8c78600c64a0ad120a0099dca012de, not stripped
 
+ptrace/ System call monitor using ptrace. Creates application-specific system
+        call whitelists to detect and block malicious behavior. Detects the
+        successful return-into-libc attack and kills the compormised process.
+
+cfi/    Control-flow integrity enforcement using ptrace. Is capable of enforcing
+        forward- and backward-edge integrity and prevents the return-into-libc
+        attack.
