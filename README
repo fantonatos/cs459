@@ -13,8 +13,7 @@ rop/    Exploiting a stack buffer overflow to return-into-libc
 
 ptrace/ System call monitor using ptrace. Creates application-specific system
         call whitelists to detect and block malicious behavior. Detects the
-        successful return-into-libc attack and kills the compormised process.
+        successful return-into-libc attack and kills the compromised process.
 
-cfi/    Control-flow integrity enforcement using ptrace. Is capable of enforcing
-        forward- and backward-edge integrity and prevents the return-into-libc
-        attack.
+cfi/    Control-flow integrity enforcement using ptrace. Enforces forward- and
+        backward-edge integrity and prevents the return-into-libc attack.
